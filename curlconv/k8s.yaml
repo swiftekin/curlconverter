@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: curlconv-svc
+  namespace: test
+  labels:
+    app:  curlconv
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3001
+    targetPort: 3001
+    protocol: TCP
+  selector:
+    app: curlconv
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curlconv
+  namespace: test
+  labels:
+    app: curlconv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: curlconv
+  template:
+    metadata:
+      labels:
+        app: curlconv
+    spec:
+      containers:
+      - name: curlconv
+        image: REGISTRY/OWNER/IMAGE_NAME:IMAGE_TAG
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3001
+      imagePullSecrets:
+      - name: regcred3
