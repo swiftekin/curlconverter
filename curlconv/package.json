@@ -1,0 +1,16 @@
+{
+  "name": "curlconverter",
+  "version": "1.0.0",
+  "description": "Convert curl command to json",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "curlconverter": "^4.7.1",
+    "express": "^4.18.2"
+  },
+  "type": "module"
+}
