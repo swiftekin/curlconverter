@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 // Convert cURL command to JSON
-app.post('/convertToJson', (req, res) => {
+app.post('/curl/convertToJson', (req, res) => {
   const { curlCommand } = req.body;
 
   try {
