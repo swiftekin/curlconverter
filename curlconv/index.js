@@ -14,8 +14,9 @@ app.post('/curl/convertToJson', (req, res) => {
   const { curlCommand } = req.body;
 
   try {
-    const jsonResult = convertCurlToJson(curlCommand);
-    res.json(jsonResult);
+       const jsonResult = convertCurlToJson(curlCommand);
+       var minified = JSON.parse(JSON.stringify(JSON.parse(jsonResult)));
+       res.json(minified);
   } catch (error) {
     res.status(500).send('Error converting cURL command to JSON');
   }
