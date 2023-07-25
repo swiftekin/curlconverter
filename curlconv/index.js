@@ -5,6 +5,7 @@ import { convertCurlToJson } from './module.js';
 const app = express();
 const port = 3001;
 
+// Middleware to parse JSON in request body
 app.use(express.json());
 app.use(bodyParser.json());
 
@@ -23,4 +24,3 @@ app.post('/curl/convertToJson', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
