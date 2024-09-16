@@ -1,0 +1,43 @@
+env:
+  app: 'curlconv'
+name: CI-curlconv
+on:
+  #push:
+  #  branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+       name: checkout
+       uses: actions/checkout@v3
+      -
+        name: Login to GitHub Container Registry
+        id: login-ghcr
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GB_TOKEN }}
+      -
+       name: Build, tag, and push image to ghcr
+       env:
+        REGISTRY: ghcr.io
+        OWNER: swiftekin
+        IMAGE_NAME: curlconv
+        IMAGE_TAG: ${{ github.sha }}
+       run: |
+        docker build -t $REGISTRY/$OWNER/$IMAGE_NAME:$IMAGE_TAG ./curlconv
+        docker push $REGISTRY/$OWNER/$IMAGE_NAME:$IMAGE_TAG
+      -
+       name: Kubernetes set context
+       uses: Azure/k8s-set-context@v1
+       with:
+         method: kubeconfig
+         kubeconfig: ${{ secrets.KUBE_CONFIG }}
+      -
+        name: Docker Build and Push, Kubernetes apply
+        run: |
+          sed -i'' -e 's/REGISTRY/ghcr.io/g' -e 's/OWNER/swiftekin/g' -e 's/IMAGE_NAME/curlconv/g' -e 's/IMAGE_TAG/${{ github.sha }}/g' ./curlconv/k8s.yaml
+          kubectl apply -f ./curlconv/k8s.yaml
